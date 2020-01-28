@@ -1,2 +1,8 @@
+[all]
+gs = "git status"
+ga = "git add"
+gaa = "git add --all"
+bash = "git add --all -p"
 
-key = "value" # Yeah, you can do this.
+[bash]
+gaap = "sdfs"

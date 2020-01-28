@@ -2,6 +2,12 @@ import argparse
 import sys
 import toml
 
+from enum import Enum
+
+class ConsoleType(Enum):
+    BASH = 'bash'
+    POWERSHELL = 'ps'
+    FISH = 'fish'
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -16,6 +22,8 @@ def parse_args():
         sys.exit(1)
     return args
 
+def checkTomlContent(toml):
+    pass
 
 def main():
     args = parse_args()
