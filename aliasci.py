@@ -3,11 +3,18 @@ import sys
 import toml
 
 from enum import Enum
+import sys
+
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 
 class ConsoleType(Enum):
     BASH = 'bash'
     POWERSHELL = 'ps'
     FISH = 'fish'
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -22,16 +29,25 @@ def parse_args():
         sys.exit(1)
     return args
 
-def checkTomlContent(toml):
-    pass
+
+def load_toml_config(toml_string):
+    toml_json = toml.loads(toml_string)
+    possible_keys = [e.value for e in ConsoleType]
+    possible_keys.append("all")
+    for key in toml_json:
+        if key not in possible_keys:
+            eprint(f"Unknown key {key}")
+            sys.exit(1)
+    return toml_json
+
 
 def main():
     args = parse_args()
 
-    parsed_toml = toml.loads(args.config_file.read())
+    config = load_toml_config(args.config_file.read())
 
     # TODO Run script
-    print(parsed_toml)
+    print(config)
 
 
 if __name__ == '__main__':
