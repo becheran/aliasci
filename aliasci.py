@@ -13,6 +13,7 @@ def eprint(*args, **kwargs):
 class ConsoleType(Enum):
     BASH = 'bash'
     POWERSHELL = 'ps'
+    CMD = 'cmd'
     FISH = 'fish'
 
 
@@ -55,16 +56,25 @@ def main():
 
     config = load_toml_config(args.config_file.read())
 
-    ps_script = generate_ps(_merge(config, 'ps'))
+    ps_script = generate_script(config, ConsoleType.POWERSHELL)
+    bash_script = generate_script(config, ConsoleType.BASH)
+    cmd_script = generate_script(config, ConsoleType.CMD)
+    fish_script = generate_script(config, ConsoleType.FISH)
 
     # TODO Run script
-    print(ps_script)
+    print(cmd_script)
 
 
-def generate_ps(config):
+def generate_script(config, console_type):
     script = str()
-    for (key, value) in config.items():
-        script += f'Set-Alias -Name {key} -Value {value}\n'
+    merged_config = _merge(config, str(console_type))
+    for (key, value) in merged_config.items():
+        if console_type is ConsoleType.POWERSHELL:
+            script += f'Set-Alias -Name {key} -Value {value}\n'
+        elif console_type is (ConsoleType.BASH or ConsoleType.FISH):
+            script += f'alias {key}="{value}"\n'
+        elif console_type is ConsoleType.CMD:
+            script += f'doskey {key}={value} $*\n'
     return script
 
 
