@@ -20,7 +20,10 @@ class ConsoleType(Enum):
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Convert a cli toml file to different command line scripts used to permanently set an alias for different tools")
-    parser.add_argument('config_file', type=argparse.FileType(encoding='UTF-8'),
+    parser.add_argument('config_file',
+                        type=argparse.FileType(encoding='UTF-8'),
+                        default='./aliases.toml',
+                        nargs='?',
                         help='The config file containing a list of command line arguments')
 
     try:
@@ -77,6 +80,7 @@ def generate_script(config, console_type):
 
 def main():
     args = parse_args()
+    print(f'Generate aliases scripts for config file "{args.config_file.name}"')
 
     config = load_toml_config(args.config_file.read())
 
