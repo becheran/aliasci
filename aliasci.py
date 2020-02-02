@@ -1,6 +1,6 @@
 import argparse
-import sys
 import toml
+from pathlib import Path
 
 from enum import Enum
 import sys
@@ -51,18 +51,15 @@ def _merge(config, key):
     return config['all']
 
 
-def main():
-    args = parse_args()
-
-    config = load_toml_config(args.config_file.read())
-
-    ps_script = generate_script(config, ConsoleType.POWERSHELL)
-    bash_script = generate_script(config, ConsoleType.BASH)
-    cmd_script = generate_script(config, ConsoleType.CMD)
-    fish_script = generate_script(config, ConsoleType.FISH)
-
-    # TODO Run script
-    print(cmd_script)
+def _script_name(console_type: ConsoleType):
+    if console_type is ConsoleType.POWERSHELL:
+        return 'powershell_aliases.ps1'
+    elif console_type is ConsoleType.BASH:
+        return 'bash_aliases.sh'
+    elif console_type is ConsoleType.CMD:
+        return 'cmd_aliases.cmd'
+    elif console_type is ConsoleType.FISH:
+        return 'fish_aliases.sh'
 
 
 def generate_script(config, console_type):
@@ -71,11 +68,23 @@ def generate_script(config, console_type):
     for (key, value) in merged_config.items():
         if console_type is ConsoleType.POWERSHELL:
             script += f'Set-Alias -Name {key} -Value {value}\n'
-        elif console_type is (ConsoleType.BASH or ConsoleType.FISH):
+        elif console_type is ConsoleType.BASH or console_type is ConsoleType.FISH:
             script += f'alias {key}="{value}"\n'
         elif console_type is ConsoleType.CMD:
             script += f'doskey {key}={value} $*\n'
     return script
+
+
+def main():
+    args = parse_args()
+
+    config = load_toml_config(args.config_file.read())
+
+    Path("./out").mkdir(parents=True, exist_ok=True)
+    for console_type in ConsoleType:
+        script = generate_script(config, console_type)
+        with open(f"./out/{_script_name(console_type)}", "w+") as f:
+            f.write(script)
 
 
 if __name__ == '__main__':
