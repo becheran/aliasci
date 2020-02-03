@@ -86,6 +86,18 @@ def generate_script(config, console_type):
             script += f'cmd /c alias {key}={value} $*\n'
         else:
             raise NotImplementedError(f'Missing generate script impl for console type "{console_type}"')
+
+    # Some consoles need additional steps to save keys persistently
+    if console_type is ConsoleType.CMD:
+        aliases_cmds = script
+        doskey_dir = 'c:\\windows\\bin\\'
+        doskey_file_path = f'{doskey_dir}doskey.bat'
+        script += f'if not exist {doskey_dir} mkdir {doskey_dir}\n'
+        script += f'echo @echo off>{doskey_file_path}\n'
+        for line in aliases_cmds.splitlines():
+            script += f'echo {line}>>{doskey_file_path}\n'
+        script += r'REG ADD "HKCU\Software\Microsoft\Command Processor" /t REG_SZ ' \
+                  r'/v AutoRun /d c:\windows\bin\doskey.bat /f'
     return script
 
 

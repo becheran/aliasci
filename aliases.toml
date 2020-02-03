@@ -16,6 +16,7 @@ gp = "git push"
 
 [cmd]
 # Aliases only used for windows cmd
+ls = "dir"
 
 [fish]
 # Aliases only used for the Linux friendly interactive shell (FISH)
