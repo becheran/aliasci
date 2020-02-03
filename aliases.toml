@@ -1,8 +1,24 @@
 [all]
+# Aliases used for all command lines
 gs = "git status"
 ga = "git add"
 gaa = "git add --all"
-bash = "git add --all -p"
+gaap = "git add --all -p"
+gc = "git commit"
+gcm = "git commit -m"
+gp = "git push"
 
 [bash]
-gaap = "sdfs"
+# Aliases used only for the Bourne-again shell (BASH)
+
+[ps]
+# Aliases only used for windows PowerShell
+
+[cmd]
+# Aliases only used for windows cmd
+
+[fish]
+# Aliases only used for the Linux friendly interactive shell (FISH)
+
+[cmder]
+# Aliases only used for the console emulator cmder (https://cmder.net)
