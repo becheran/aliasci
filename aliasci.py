@@ -15,11 +15,13 @@ class ConsoleType(Enum):
     POWERSHELL = 'ps'
     CMD = 'cmd'
     FISH = 'fish'
+    CMDER = 'cmder'
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Convert a cli toml file to different command line scripts used to permanently set an alias for different tools")
+        description="Convert a cli toml file to different command line scripts used to permanently set an alias for "
+                    "different tools")
     parser.add_argument('config_file',
                         type=argparse.FileType(encoding='UTF-8'),
                         default='./aliases.toml',
@@ -63,6 +65,10 @@ def _script_name(console_type: ConsoleType):
         return 'cmd_aliases.cmd'
     elif console_type is ConsoleType.FISH:
         return 'fish_aliases.sh'
+    elif console_type is ConsoleType.CMDER:
+        return 'cmder_aliases.cmd'
+    else:
+        raise NotImplementedError(f'Not implemented console type "{console_type}" to script file name')
 
 
 def generate_script(config, console_type):
@@ -71,10 +77,15 @@ def generate_script(config, console_type):
     for (key, value) in merged_config.items():
         if console_type is ConsoleType.POWERSHELL:
             script += f'Set-Alias -Name {key} -Value {value}\n'
-        elif console_type is ConsoleType.BASH or console_type is ConsoleType.FISH:
+        elif console_type is ConsoleType.BASH \
+                or console_type is ConsoleType.FISH:
             script += f'alias {key}="{value}"\n'
         elif console_type is ConsoleType.CMD:
             script += f'doskey {key}={value} $*\n'
+        elif console_type is ConsoleType.CMDER:
+            script += f'cmd /c alias {key}={value} $*\n'
+        else:
+            raise NotImplementedError(f'Missing generate script impl for console type "{console_type}"')
     return script
 
 
