@@ -73,10 +73,11 @@ def _script_name(console_type: ConsoleType):
 
 def generate_script(config, console_type):
     script = str()
-    merged_config = _merge(config, str(console_type))
+    merged_config = _merge(config, console_type.value)
     for (key, value) in merged_config.items():
         if console_type is ConsoleType.POWERSHELL:
-            script += f'Set-Alias -Name {key} -Value {value}\n'
+            script += f'function get-{key} {{ {value} }}\n'
+            script += f'Set-Alias -Name {key} -Value get-{key}\n'
         elif console_type is ConsoleType.BASH \
                 or console_type is ConsoleType.FISH:
             script += f'alias {key}="{value}"\n'
@@ -88,8 +89,8 @@ def generate_script(config, console_type):
             raise NotImplementedError(f'Missing generate script impl for console type "{console_type}"')
 
     # Some consoles need additional steps to save keys persistently
+    aliases_cmds = script
     if console_type is ConsoleType.CMD:
-        aliases_cmds = script
         doskey_dir = 'c:\\windows\\bin\\'
         doskey_file_path = f'{doskey_dir}doskey.bat'
         script += f'if not exist {doskey_dir} mkdir {doskey_dir}\n'
@@ -98,6 +99,10 @@ def generate_script(config, console_type):
             script += f'echo {line}>>{doskey_file_path}\n'
         script += r'REG ADD "HKCU\Software\Microsoft\Command Processor" /t REG_SZ ' \
                   r'/v AutoRun /d c:\windows\bin\doskey.bat /f'
+    elif console_type is ConsoleType.POWERSHELL:
+        ps_setting_path = '$env:USERPROFILE\\Documents\\WindowsPowerShell'
+        script += f'\nmd {ps_setting_path} -ErrorAction SilentlyContinue \n'
+        script += f'\n@"\n{aliases_cmds}\n"@ | Out-File -FilePath {ps_setting_path}\\Microsoft.PowerShell_profile.ps1'
     return script
 
 
