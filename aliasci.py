@@ -73,14 +73,18 @@ def _script_name(console_type: ConsoleType):
 
 def generate_script(config, console_type):
     script = str()
+    if console_type is ConsoleType.FISH:
+        script += '#!/usr/bin/env fish\n'
     merged_config = _merge(config, console_type.value)
     for (key, value) in merged_config.items():
         if console_type is ConsoleType.POWERSHELL:
             script += f'function get-{key} {{ {value} }}\n'
             script += f'Set-Alias -Name {key} -Value get-{key}\n'
-        elif console_type is ConsoleType.BASH \
-                or console_type is ConsoleType.FISH:
+        elif console_type is ConsoleType.BASH:
             script += f'alias {key}="{value}"\n'
+        elif console_type is ConsoleType.FISH:
+            script += f'alias {key}="{value}"\n'
+            script += f'funcsave {key}\n'
         elif console_type is ConsoleType.CMD:
             script += f'doskey {key}={value} $*\n'
         elif console_type is ConsoleType.CMDER:
