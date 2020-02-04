@@ -68,32 +68,39 @@ def _script_name(console_type: ConsoleType):
     elif console_type is ConsoleType.CMDER:
         return 'cmder_aliases.cmd'
     else:
-        raise NotImplementedError(f'Not implemented console type "{console_type}" to script file name')
+        raise NotImplementedError(
+            f'Not implemented console type "{console_type}" to script file name')
 
 
 def generate_script(config, console_type):
     script = str()
+    # Some consoles need a she bang
     if console_type is ConsoleType.FISH:
         script += '#!/usr/bin/env fish\n'
+    if console_type is ConsoleType.BASH:
+        script += '#!/usr/bin/env bash\n'
+
     merged_config = _merge(config, console_type.value)
+    aliases_cmds = str()
     for (key, value) in merged_config.items():
         if console_type is ConsoleType.POWERSHELL:
-            script += f'function get-{key} {{ {value} }}\n'
-            script += f'Set-Alias -Name {key} -Value get-{key}\n'
+            aliases_cmds += f'function get-{key} {{ {value} }}\n'
+            aliases_cmds += f'Set-Alias -Name {key} -Value get-{key}\n'
         elif console_type is ConsoleType.BASH:
-            script += f'alias {key}="{value}"\n'
+            aliases_cmds += f'alias {key}=\'{value}\'\n'
         elif console_type is ConsoleType.FISH:
-            script += f'alias {key}="{value}"\n'
-            script += f'funcsave {key}\n'
+            aliases_cmds += f'alias {key}="{value}"\n'
+            aliases_cmds += f'funcsave {key}\n'
         elif console_type is ConsoleType.CMD:
-            script += f'doskey {key}={value} $*\n'
+            aliases_cmds += f'doskey {key}={value} $*\n'
         elif console_type is ConsoleType.CMDER:
-            script += f'cmd /c alias {key}={value} $*\n'
+            aliases_cmds += f'cmd /c alias {key}={value} $*\n'
         else:
-            raise NotImplementedError(f'Missing generate script impl for console type "{console_type}"')
+            raise NotImplementedError(
+                f'Missing generate script impl for console type "{console_type}"')
+    script += aliases_cmds
 
     # Some consoles need additional steps to save keys persistently
-    aliases_cmds = script
     if console_type is ConsoleType.CMD:
         doskey_dir = 'c:\\windows\\bin\\'
         doskey_file_path = f'{doskey_dir}doskey.bat'
@@ -107,12 +114,17 @@ def generate_script(config, console_type):
         ps_setting_path = '$env:USERPROFILE\\Documents\\WindowsPowerShell'
         script += f'\nmd {ps_setting_path} -ErrorAction SilentlyContinue \n'
         script += f'\n@"\n{aliases_cmds}\n"@ | Out-File -FilePath {ps_setting_path}\\Microsoft.PowerShell_profile.ps1'
+    elif console_type is ConsoleType.BASH:
+        script += f'echo "# Aliases created with aliasci">>~/.bashrc\n'
+        for line in aliases_cmds.splitlines():
+            script += f'echo "{line}">>~/.bashrc\n'
     return script
 
 
 def main():
     args = parse_args()
-    print(f'Generate aliases scripts for config file "{args.config_file.name}"')
+    print(
+        f'Generate aliases scripts for config file "{args.config_file.name}"')
 
     config = load_toml_config(args.config_file.read())
 
