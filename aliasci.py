@@ -1,5 +1,6 @@
 import argparse
 import toml
+import os
 from pathlib import Path
 
 from enum import Enum
@@ -26,7 +27,11 @@ def parse_args():
                         type=argparse.FileType(encoding='UTF-8'),
                         default='./aliases.toml',
                         nargs='?',
-                        help='The config file containing a list of command line arguments')
+                        help='The config file containing a list of command line arguments'),
+    parser.add_argument('--out', '-o',
+                        type=str,
+                        default='./out/',
+                        help='The out folder for all generated scripts.')
 
     try:
         args = parser.parse_args()
@@ -128,11 +133,12 @@ def main():
 
     config = load_toml_config(args.config_file.read())
 
-    Path("./out").mkdir(parents=True, exist_ok=True)
+    Path(args.out).mkdir(parents=True, exist_ok=True)
     for console_type in ConsoleType:
         script = generate_script(config, console_type)
-        with open(f"./out/{_script_name(console_type)}", "w+") as f:
+        with open(os.path.join(args.out, _script_name(console_type)), "w+") as f:
             f.write(script)
+    print('Finished successfully. ')
 
 
 if __name__ == '__main__':
