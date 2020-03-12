@@ -90,7 +90,7 @@ def generate_script(config, console_type):
     for (key, value) in merged_config.items():
         if console_type is ConsoleType.POWERSHELL:
             aliases_cmds += f'function get-{key} {{ {value} }}\n'
-            aliases_cmds += f'Set-Alias -Name {key} -Value get-{key} -Force\n'
+            aliases_cmds += f'Set-Alias -Name {key} -Value get-{key} -Force -Option AllScope\n'
         elif console_type is ConsoleType.BASH:
             aliases_cmds += f'alias {key}=\'{value}\'\n'
         elif console_type is ConsoleType.FISH:
