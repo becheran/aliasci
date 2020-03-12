@@ -6,7 +6,9 @@ gaa = "git add --all"
 gaap = "git add --all -p"
 gc = "git commit"
 gcm = "git commit -m"
-gp = "git push"
+gps = "git push"
+gpl = "git pull"
+gplr = "git pull --rebase"
 
 [bash]
 # Aliases used only for the Bourne-again shell (BASH)
