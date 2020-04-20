@@ -1,5 +1,8 @@
 # aliasci
 
+[![Build Status](https://gitlab.com/becheran/aliasci_ci/badges/master/pipeline.svg)](https://gitlab.com/becheran/aliasci_ci/pipelines)
+[![](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Unified repository to store aliases and use them in different command line tools.
 
 Use with *python 3* and run the following command to generate scripts for different CLIs to the *out* directory:
