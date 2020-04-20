@@ -120,9 +120,11 @@ def generate_script(config, console_type):
         script += f'\nmd {ps_setting_path} -ErrorAction SilentlyContinue \n'
         script += f'\n@"\n{aliases_cmds}\n"@ | Out-File -FilePath {ps_setting_path}\\Microsoft.PowerShell_profile.ps1'
     elif console_type is ConsoleType.BASH:
-        script += f'echo "# Aliases created with aliasci">>~/.bashrc\n'
+        script += f"sed '/# aliasci_start/,/#aliasci_end/d' -i ~/.bashrc\n"
+        script += f'echo "# aliasci_start">>~/.bashrc\n'
         for line in aliases_cmds.splitlines():
             script += f'echo "{line}">>~/.bashrc\n'
+        script += f'echo "# aliasci_end">>~/.bashrc\n'
     return script
 
 
