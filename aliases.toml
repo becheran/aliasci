@@ -15,11 +15,11 @@ gplr = "git pull --rebase"
 [bash]
 # Aliases used only for the Bourne-again shell (BASH)
 x = "clear && ls"
-alias .. = "cd .. && clear && ls"
-alias ... = "cd ../.. && clear && ls"
-alias .... = "cd ../../.. && clear && ls"
-alias ..... = "cd ../../../.. && clear && ls"
-alias dev = "pushd ~/dev && clear && ls"
+dev = "pushd ~/dev && clear && ls"
+".." = "cd .. && clear && ls"
+"..." = "cd ../.. && clear && ls"
+"...." = "cd ../../.. && clear && ls"
+"....." = "cd ../../../.. && clear && ls"
 
 [ps]
 # Aliases only used for windows PowerShell
@@ -31,11 +31,11 @@ ls = "dir"
 [fish]
 # Aliases only used for the Linux friendly interactive shell (FISH)
 x = "clear & ls"
-alias .. = "cd .. & clear & ls"
-alias ... = "cd ../.. & clear & ls"
-alias .... = "cd ../../.. & clear & ls"
-alias ..... = "cd ../../../.. & clear & ls"
-alias dev = "pushd ~/dev & clear & ls"
+dev = "pushd ~/dev & clear & ls"
+".." = "cd .. & clear & ls"
+"..." = "cd ../.. & clear & ls"
+"...." = "cd ../../.. & clear & ls"
+"....." = "cd ../../../.. & clear & ls"
 
 [cmder]
 # Aliases only used for the console emulator cmder (https://cmder.net)
