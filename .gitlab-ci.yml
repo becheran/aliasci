@@ -12,4 +12,5 @@ generate_scripts:
   - python aliasci.py -o ./out/
   artifacts:
     paths:
-      - ./out/
+      - ./out/  
+    expire_in: 2 years
