@@ -7,10 +7,10 @@ gaap = "git add --all -p"
 gc = "git checkout"
 gcb = "git checkout -b"
 gcm = "git commit -m"
-gcam = "git commit --amend -m"
 gps = "git push"
-gpl = "git pull"
-gplr = "git pull --rebase"
+gpsf = "git push --force-with-lease"
+gpl = "git pull --rebase"
+gplm = "git pull --merge"
 
 [bash]
 # Aliases used only for the Bourne-again shell (BASH)
