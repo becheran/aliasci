@@ -1,7 +1,6 @@
 # aliasci
 
-[![Build Status](https://gitlab.com/becheran/aliasci_ci/badges/master/pipeline.svg)](https://gitlab.com/becheran/aliasci_ci/pipelines)
-[![](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python application](https://github.com/becheran/aliasci/actions/workflows/app.yml/badge.svg)](https://github.com/becheran/aliasci/actions/workflows/app.yml)
 
 Unified repository to store aliases and use them in different command line tools.
 

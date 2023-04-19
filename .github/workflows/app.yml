@@ -24,7 +24,7 @@ jobs:
           pip install -r requirements.txt
       - name: Generate
         run: python aliasci.py -o ./out/
-      - uses: actions/upload-artifact@v3
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: res
-          path: ./out/
+          files: ./out/*
