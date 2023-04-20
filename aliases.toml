@@ -11,6 +11,7 @@ gps = "git push"
 gpsf = "git push --force-with-lease"
 gpl = "git pull --rebase"
 gplm = "git pull --merge"
+kc = "kubectl"
 
 [bash]
 # Aliases used only for the Bourne-again shell (BASH)
