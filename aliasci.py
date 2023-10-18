@@ -116,7 +116,6 @@ def generate_script(config, console_type):
         script += r'REG ADD "HKCU\Software\Microsoft\Command Processor" /t REG_SZ ' \
                   r'/v AutoRun /d c:\windows\bin\doskey.bat /f'
     elif console_type is ConsoleType.POWERSHELL:
-        script += f'\nmd {ps_setting_path} -ErrorAction SilentlyContinue \n'
         script += f'\n@"\n{aliases_cmds.replace("$", "`$")}\n"@ | Out-File -FilePath $PROFILE'
     elif console_type is ConsoleType.BASH:
         script += f"sed '/# aliasci_start/,/#aliasci_end/d' -i ~/.bashrc\n"
