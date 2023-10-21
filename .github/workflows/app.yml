@@ -2,8 +2,8 @@ name: Python application
 
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - "master"
 
 permissions:
   contents: write
@@ -24,6 +24,11 @@ jobs:
       - name: Generate
         run: python aliasci.py -o ./out/
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: "marvinpinto/action-automatic-releases@v1.2.1"
         with:
-          files: ./out/*
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Current Scripts"
+          files: |
+            ./out/*
